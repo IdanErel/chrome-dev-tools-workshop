@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #282c34;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.hero {
+    background-color: #007bff; /* Intentional bug: Should be #4CAF50 */
+    color: white;
+    padding: 50px;
+    text-align: center;
+}
+
+.callout {
+    border: 2px solid #ff0000;
+    padding: 20px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.callout .important::before {
+    content: "⚠️ ";
+    font-size: 20px;
+    color: #ff0000;
+    margin-right: 10px;
+}
+
+.features {
+    display: flex;
+    padding: 20px;
+    position: relative; /* Intentional issue for overlapping */
+}
+
+.feature {
+    flex: 1;
+    margin: 0 10px; /* Intentional issue: Misalignment due to margins */
+    padding: 20px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.feature::after {
+    content: "New!";
+    position: absolute;
+    top: 20px;
+    right: 52px;
+    background-color: yellow;
+    padding: 5px;
+    border: 1px solid red;
+    font-size: 12px;
+    color: red;
+}
+
+.feature:last-child {
+    margin-top: 30px; /* Intentional issue: Misalignment */
+}
+
+.form-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-top: 20px;
+    border-top: 5px solid #007bff; /* Intentional bug: Should be #4CAF50 */
+}
+
+form label {
+    display: block;
+    margin-top: 10px;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+footer {
+    background-color: #282c34;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+}
