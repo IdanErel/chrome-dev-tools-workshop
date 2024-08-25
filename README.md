@@ -14,7 +14,7 @@ This repository contains a series of exercises designed to help you master Googl
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/IdanErel/chrome-devtools-exercises.git](https://github.com/IdanErel/chrome-dev-tools-workshop)
+   git clone https://github.com/IdanErel/chrome-dev-tools-workshop.git
 
 2. Navigate to a folder and open index.html in your browser.
 
