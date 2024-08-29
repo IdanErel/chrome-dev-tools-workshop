@@ -18,7 +18,7 @@ This repository contains a series of exercises designed to help you master Googl
 
 2. Navigate to a folder and open index.html in your browser.
 
-3. Follow the instructions in the README.md file inside each folder.
+3. Follow the instructions in the exercise.md file inside each folder.
 
 Happy debugging!
 
