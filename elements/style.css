@@ -43,7 +43,7 @@ nav ul li a {
 }
 
 .callout .important::before {
-    content: "⚠️ ";
+    content: "Warning";
     font-size: 20px;
     color: #ff0000;
     margin-right: 10px;
