@@ -34,6 +34,7 @@ Learn to inspect and modify HTML and CSS using the Elements panel, identify comp
    - Toggle the responsive design mode in DevTools (Ctrl + Shift + M or Cmd + Shift + M).
    - Inspect how the layout changes on different screen sizes.
    - Make adjustments to the `.features` section to ensure it stacks vertically on smaller screens and fixes the overlapping issues.
+   - Add a media query to the `style.css` file so that the `.features` stack vertically on screens smaller than 768px.
 
 ## Tips
 - The Elements panel is a powerful tool for live-editing HTML and CSS, debugging layout issues, and improving the accessibility of your web pages.

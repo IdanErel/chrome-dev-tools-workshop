@@ -31,6 +31,9 @@ Use the Console panel to log messages, debug errors, and interact with the DOM, 
 6. **Test Error Handling**:
    - Manually trigger the async function again by running `faultyAsyncFunction()` in the console and ensure that the error is properly caught and logged.
 
+7. **Use the Console Interactively**:
+   - After fixing the sum calculation, declare a new array of numbers directly in the console and run your corrected logic on it to verify it works with different data.
+
 ## Tips
 - The Console is useful for testing JavaScript code, debugging errors, and logging messages, especially with async functions.
 - Use `try...catch` for synchronous code and `.catch()` for promises to handle errors effectively.

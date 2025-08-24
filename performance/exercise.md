@@ -7,8 +7,9 @@ Use the Performance panel to analyze and optimize the performance of a webpage, 
 
 1. **Record a Performance Profile**:
    - Open `index.html` in your browser.
+   - Before starting the test, hover over the "Start Test" button and type into the input field to feel normal interactivity.
    - Open the DevTools Performance panel (Right-click -> Inspect -> Performance).
-   - Click the "Start Test" button to initiate the performance test.
+   - Click the "Start Test" button to initiate the performance test, then try hovering the button again and typing in the input.
    - Record the profile while the test is running and stop it once complete.
 
 2. **Identify Event Loop Blocking**:

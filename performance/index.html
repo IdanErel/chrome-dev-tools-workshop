@@ -4,9 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Performance Panel Exercise</title>
+    <style>
+        #start-test {
+            transition: background-color 150ms ease-in-out, transform 150ms ease-in-out;
+        }
+        #start-test:hover {
+            background-color: #4CAF50;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 <body>
     <h1>Performance Testing</h1>
+    <label for="try-typing">Try typing while the test runs:</label>
+    <input id="try-typing" type="text" placeholder="Type here..." />
+
     <button id="start-test">Start Test</button>
     <div id="dynamic-content"></div>
 
