@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 // Intended logic: This promise should either resolve OR reject, but not both.
-                resolve("Success!");
                 reject(new Error("This should have been rejected!")); // Intentional logic error
+                resolve("Success!");
             }, 1000);
         });
     }
