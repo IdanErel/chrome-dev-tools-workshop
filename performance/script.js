@@ -41,7 +41,7 @@ document.getElementById('start-test').addEventListener('click', () => {
 
 /*
 const fragment = document.createDocumentFragment();
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 100000; i++) {
     const newElement = document.createElement('p');
     newElement.textContent = `Paragraph ${i}`;
     fragment.appendChild(newElement);
