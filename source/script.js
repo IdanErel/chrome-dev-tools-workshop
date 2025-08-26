@@ -23,12 +23,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function triggerError() {
+        const outOfScopeVariable = "Some random data";
         let data = "Initial data";
 
         try {
             data = processData(data);
         } catch (e) {
-            console.error("Error processing data:", e);
+            console.error("Error processing data:", e, outOfScopeVariable);
         }
 
         output.textContent = "Processed Data: " + data;
@@ -36,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function processData(input) {
         // Intentional logic error: Undefined variable used
-        return input.toUpperCase() + " " + undefinedVariable;
+        return input.toUpperCase() + " " + outOfScopeVariable;
     }
 
     document.getElementById("trigger-debug").addEventListener("click", () => {
