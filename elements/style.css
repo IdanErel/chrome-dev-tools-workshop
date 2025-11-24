@@ -65,6 +65,18 @@ nav ul li a {
     position: relative;
 }
 
+.feature:first-child {
+    margin-left: 50px; /* Intentional issue: Extra left margin causes horizontal misalignment */
+    margin-right: 10px;
+    margin-top: 30px; /* Intentional issue: Extra top margin causes vertical misalignment */
+}
+
+.feature:last-child {
+    margin-left: 10px;
+    margin-right: 50px; /* Intentional issue: Extra right margin causes horizontal misalignment */
+    margin-top: 20px; /* Intentional issue: Extra top margin causes vertical misalignment */
+}
+
 .feature::after {
     content: "New!";
     position: absolute;
@@ -75,10 +87,6 @@ nav ul li a {
     border: 1px solid red;
     font-size: 12px;
     color: red;
-}
-
-.feature:last-child {
-    margin-top: 30px; /* Intentional issue: Misalignment */
 }
 
 .form-section {

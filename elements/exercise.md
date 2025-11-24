@@ -16,8 +16,7 @@ Learn to inspect and modify HTML and CSS using the Elements panel, identify comp
    - Similarly, find the `.form-section` and change its top border color from `#007bff` to `#4CAF50`.
 
 3. **Identify and Fix Layout Issues**:
-   - The `.feature` elements are misaligned due to the `margin` settings. Find and correct the CSS rules to ensure they align properly.
-   - The last `.feature` has an additional margin at the top, causing it to be misaligned. Correct this to ensure all `.feature` elements are aligned.
+   - The `.feature` elements are both horizontally and vertically misaligned due to inconsistent `margin` settings. The first `.feature` has extra left margin and top margin, and the last `.feature` has extra right margin and top margin, causing them to not align properly within the flex container. To fix this, remove all the margin properties from `.feature:first-child` and `.feature:last-child`, remove the horizontal margins from the base `.feature` rule, and instead use the `gap` property on the `.features` container to create consistent spacing between all feature elements.
 
 4. **Fix Overlapping Elements**:
    - Notice that the "New!" label on `.feature::after` overlaps with other content in certain screen sizes. Adjust the CSS to prevent this overlap.
