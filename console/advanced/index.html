@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Panel Advanced Exercise - Shopping Cart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            max-width: 1000px;
+        }
+
+        .products {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .products h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product:last-child {
+            border-bottom: none;
+        }
+
+        .product-info h3 {
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-info .price {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-btn:hover {
+            background: #5a6fd6;
+        }
+
+        .cart-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .cart-section h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        #cart-container {
+            min-height: 200px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-empty {
+            color: #999;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .cart-total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .debug-section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #fff3cd;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .debug-section h3 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .debug-btn {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .debug-btn:hover {
+            background: #e0a800;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛒 Shopping Cart - Console Debugging</h1>
+    
+    <div class="container">
+        <div class="products">
+            <h2>Products</h2>
+            
+            <div class="product">
+                <div class="product-info">
+                    <h3>Wireless Headphones</h3>
+                    <span class="price">$99.99</span>
+                </div>
+                <button class="add-btn" data-name="Wireless Headphones" data-price="99.99">Add to Cart</button>
+            </div>
+
+            <div class="product">
+                <div class="product-info">
+                    <h3>Mechanical Keyboard</h3>
+                    <span class="price">$149.99</span>
+                </div>
+                <button class="add-btn" data-name="Mechanical Keyboard" data-price="149.99">Add to Cart</button>
+            </div>
+
+            <div class="product">
+                <div class="product-info">
+                    <h3>USB-C Hub</h3>
+                    <span class="price">$49.99</span>
+                </div>
+                <button class="add-btn" data-name="USB-C Hub" data-price="49.99">Add to Cart</button>
+            </div>
+
+            <div class="product">
+                <div class="product-info">
+                    <h3>Monitor Stand</h3>
+                    <span class="price">$79.99</span>
+                </div>
+                <button class="add-btn" data-name="Monitor Stand" data-price="79.99">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="cart-section">
+            <h2>Your Cart</h2>
+            <div id="cart-container">
+                <p class="cart-empty">Your cart is empty</p>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h3>⚠️ Debug Tools (for exercise)</h3>
+        <p>Use these buttons to create debugging scenarios:</p>
+        <button class="debug-btn" id="add-listeners">Add Many Listeners (creates leak)</button>
+        <button class="debug-btn" id="clear-cart">Clear Cart</button>
+        <button class="debug-btn" id="test-closure">Test Closure</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

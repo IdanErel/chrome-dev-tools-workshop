@@ -1,0 +1,342 @@
+/* ===========================================
+   Advanced Elements Exercise - Dashboard Styles
+   
+   This file contains intentional bugs for students to find and fix
+   using advanced DevTools features like Grid overlay, Flexbox overlay,
+   Force state, and Animations panel.
+   =========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+/* ----- Header ----- */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    /* 
+     * BUG #5: Z-index is too high, causes header to appear above modal
+     * The header has z-index: 1000 which conflicts with the modal
+     */
+    z-index: 1000; /* PROBLEM: Too high, blocks modal */
+    /* SOLUTION: z-index: 100; -- Lower than modal's z-index */
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ----- Notification Badge with Animation Bug ----- */
+.notification-icon {
+    position: relative;
+    font-size: 1.5rem;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.75rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 
+     * BUG #4: Animation is way too fast (0.1s) to debug
+     * Students should use the Animations panel to slow it down and see
+     * that the scale goes to 0 causing a "flicker" effect
+     */
+    animation: pulse 0.1s ease-in-out 3; /* PROBLEM: Too fast, hard to debug */
+    /* SOLUTION: animation: pulse 0.5s ease-in-out 3; */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        /* 
+         * BUG #4 (continued): Scale goes to 0 which causes the badge to disappear
+         * This creates a jarring flicker effect
+         */
+        transform: scale(0); /* PROBLEM: Disappears completely */
+        /* SOLUTION: transform: scale(1.3); -- Should grow, not shrink to nothing */
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ----- Layout ----- */
+.layout {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* ----- Sidebar with Flexbox Bug ----- */
+.sidebar {
+    width: 200px;
+    background: #2d3436;
+    padding: 1rem;
+}
+
+.sidebar-nav {
+    display: flex;
+    /* 
+     * BUG #2: Nav items overflow horizontally instead of stacking vertically
+     * Students should use the Flexbox overlay to visualize this
+     */
+    flex-direction: row; /* PROBLEM: Items are horizontal */
+    flex-wrap: nowrap; /* PROBLEM: Forces horizontal overflow */
+    gap: 0.5rem;
+    overflow-x: auto; /* Shows the overflow issue */
+    /* 
+     * SOLUTION:
+     * flex-direction: column;
+     * flex-wrap: nowrap; (or remove it)
+     * overflow-x: visible; (or remove it)
+     */
+}
+
+.nav-item {
+    color: #b2bec3;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* ----- Dashboard Grid with Bug ----- */
+.dashboard {
+    flex: 1;
+    padding: 2rem;
+    /* 
+     * CSS Grid layout for dashboard widgets
+     * Students should enable the Grid overlay to see the 3-column layout
+     */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    align-content: start;
+}
+
+.widget {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.widget-large {
+    /* 
+     * BUG #1: This widget should span 2 columns but doesn't
+     * The property name is wrong (using 'columns' instead of 'column')
+     * Students should use the Grid overlay to see this only takes 1 column
+     */
+    grid-columns: span 2; /* PROBLEM: Invalid property name! */
+    /* SOLUTION: grid-column: span 2; -- Note: 'column' not 'columns' */
+}
+
+.widget h3 {
+    color: #2d3436;
+    margin-bottom: 1rem;
+}
+
+.widget .stat {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.chart-placeholder {
+    background: #f0f2f5;
+    height: 150px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #636e72;
+}
+
+/* ----- Cards with Hover State Bug ----- */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    /* 
+     * BUG #3: Background on hover is too dark, text becomes unreadable
+     * Students should use "Force state" → ":hover" to inspect this
+     * without needing to keep the mouse hovering
+     */
+    background: #1a1a2e; /* PROBLEM: Dark background + dark text = unreadable */
+    /* SOLUTION: background: #f8f9ff; -- Light background keeps text readable */
+}
+
+.card h4 {
+    color: #2d3436;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    color: #636e72;
+}
+
+.card-hover-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(102, 126, 234, 0.95);
+    padding: 0.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    /* Hidden by default, shown on hover */
+    transform: translateY(100%);
+    transition: transform 0.2s;
+}
+
+.card:hover .card-hover-menu {
+    transform: translateY(0);
+}
+
+.card-hover-menu button {
+    background: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+/* ----- Modal with Z-Index Bug ----- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 
+     * BUG #5: Modal z-index is lower than header
+     * The modal should appear above everything but the header bleeds through
+     * Students should inspect z-index values or use the Layers panel
+     */
+    z-index: 500; /* PROBLEM: Lower than header's z-index (1000) */
+    /* SOLUTION: z-index: 2000; -- Higher than header, OR lower header's z-index */
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+    margin-bottom: 1rem;
+    color: #2d3436;
+}
+
+.modal-content p {
+    margin-bottom: 1.5rem;
+    color: #636e72;
+}
+
+.modal-content .btn {
+    background: #667eea;
+    color: white;
+    border: none;
+}
+
+/* ===========================================
+   SOLUTIONS SUMMARY
+   
+   Bug #1 (Grid): 
+   - Problem: grid-columns: span 2 (invalid property)
+   - Solution: grid-column: span 2
+   
+   Bug #2 (Flexbox):
+   - Problem: .sidebar-nav has flex-direction: row (items horizontal)
+   - Solution: flex-direction: column
+   
+   Bug #3 (Hover State):
+   - Problem: .card:hover background is #1a1a2e (too dark)
+   - Solution: background: #f8f9ff (light color)
+   
+   Bug #4 (Animation):
+   - Problem: Animation is 0.1s and scale goes to 0
+   - Solution: Change to 0.5s and scale(1.3) at 50%
+   
+   Bug #5 (Z-Index):
+   - Problem: Header z-index (1000) > Modal z-index (500)
+   - Solution: Either lower header to 100 or raise modal to 2000
+   =========================================== */
+

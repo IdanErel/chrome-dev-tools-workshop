@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Panel Advanced Exercise - Memory Leaks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #ff7b72;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            margin-bottom: 2rem;
+        }
+
+        .warning-banner {
+            background: rgba(255, 123, 114, 0.1);
+            border: 1px solid #ff7b72;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .warning-banner span {
+            font-size: 1.5rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .panel h2 {
+            color: #ff7b72;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel h2 .icon {
+            font-size: 1.3rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2ea043;
+        }
+
+        button.secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+        }
+
+        button.secondary:hover {
+            background: #30363d;
+        }
+
+        button.danger {
+            background: #da3633;
+        }
+
+        button.danger:hover {
+            background: #f85149;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            background: #0d1117;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+
+        .stat-item .label {
+            font-size: 0.8rem;
+            color: #8b949e;
+            margin-top: 0.25rem;
+        }
+
+        .items-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+
+        .item {
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            background: #21262d;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            min-height: 50px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .hint {
+            background: #1f2937;
+            border-left: 3px solid #58a6ff;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.85rem;
+            color: #8b949e;
+        }
+
+        .hint strong {
+            color: #58a6ff;
+        }
+
+        .log-container {
+            max-height: 150px;
+            overflow-y: auto;
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+        }
+
+        .log-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #21262d;
+        }
+
+        .log-entry.warning {
+            color: #d29922;
+        }
+
+        .log-entry.error {
+            color: #f85149;
+        }
+
+        .log-entry.success {
+            color: #3fb950;
+        }
+
+        .memory-viz {
+            height: 60px;
+            background: #0d1117;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            padding: 0.5rem;
+            gap: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .memory-bar {
+            flex: 1;
+            background: #238636;
+            border-radius: 2px 2px 0 0;
+            min-height: 4px;
+            transition: height 0.3s;
+        }
+
+        .memory-bar.high {
+            background: #d29922;
+        }
+
+        .memory-bar.critical {
+            background: #f85149;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Memory Leak Detective</h1>
+    <p class="subtitle">Performance Panel Advanced Exercise</p>
+
+    <div class="warning-banner">
+        <span>⚠️</span>
+        <div>
+            <strong>This page intentionally contains memory leaks!</strong><br>
+            Use the Memory panel to find and understand them.
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Leak Type 1: Array that grows forever -->
+        <div class="panel">
+            <h2><span class="icon">📦</span> Leak #1: Growing Array</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="value" id="items-count">0</div>
+                    <div class="label">Items in Memory</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="items-size">0 KB</div>
+                    <div class="label">Estimated Size</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="add-items">Add Items</button>
+                <button id="clear-items" class="secondary">Clear Items</button>
+            </div>
+            <div class="items-container" id="items-list">
+                <div class="item">No items yet...</div>
+            </div>
+            <div class="hint">
+                💡 Take a snapshot, add items, clear, take another snapshot. 
+                Compare to see if items are truly released.
+            </div>
+        </div>
+
+        <!-- Leak Type 2: Detached DOM nodes -->
+        <div class="panel">
+            <h2><span class="icon">🏗️</span> Leak #2: Detached DOM</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="value" id="cards-count">0</div>
+                    <div class="label">Cards Created</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="cards-removed">0</div>
+                    <div class="label">Cards Removed</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="create-cards">Create Cards</button>
+                <button id="remove-cards" class="danger">Remove Cards</button>
+            </div>
+            <div class="cards-container" id="cards-container"></div>
+            <div class="hint">
+                💡 After removing cards, search for <strong>"Detached"</strong> 
+                in heap snapshot to find orphaned DOM nodes.
+            </div>
+        </div>
+
+        <!-- Leak Type 3: Event listener leak -->
+        <div class="panel">
+            <h2><span class="icon">🎧</span> Leak #3: Event Listeners</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="value" id="listener-count">0</div>
+                    <div class="label">Listeners Added</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="listener-removed">0</div>
+                    <div class="label">Listeners Removed</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="add-listener">Add Listener Leak</button>
+                <button id="proper-listener" class="secondary">Add Proper Listener</button>
+                <button id="cleanup-listeners" class="danger">Cleanup (Fixed)</button>
+            </div>
+            <button id="test-button" style="width: 100%; margin-top: 0.5rem;">
+                Test Button (Click Me)
+            </button>
+            <div class="hint">
+                💡 Open <strong>Performance Monitor</strong> (Ctrl+Shift+P) and 
+                watch "JS event listeners" count grow.
+            </div>
+        </div>
+
+        <!-- Leak Type 4: Closure holding large data -->
+        <div class="panel">
+            <h2><span class="icon">🔒</span> Leak #4: Closure Leak</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="value" id="closure-count">0</div>
+                    <div class="label">Closures Created</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="closure-size">0 MB</div>
+                    <div class="label">Data Retained</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="create-closure">Create Leaky Closure</button>
+                <button id="create-good-closure" class="secondary">Create Good Closure</button>
+            </div>
+            <div class="hint">
+                💡 Each leaky closure captures a large array. Use 
+                <strong>Allocation Timeline</strong> to see memory grow.
+            </div>
+        </div>
+
+        <!-- Continuous Leak Simulation -->
+        <div class="panel">
+            <h2><span class="icon">🔄</span> Continuous Leak</h2>
+            <div class="memory-viz" id="memory-viz">
+                <!-- Memory bars will be added here -->
+            </div>
+            <div class="controls">
+                <button id="start-leak">Start Continuous Leak</button>
+                <button id="stop-leak" class="danger">Stop Leak</button>
+            </div>
+            <div class="hint">
+                💡 Start the leak, then use <strong>Allocation Timeline</strong> 
+                to see memory accumulate over time.
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="panel">
+            <h2><span class="icon">📋</span> Activity Log</h2>
+            <div class="log-container" id="activity-log">
+                <div class="log-entry">Ready for memory leak detection...</div>
+            </div>
+            <div class="controls" style="margin-top: 1rem;">
+                <button id="force-gc" class="secondary">Force GC (if exposed)</button>
+                <button id="clear-log" class="secondary">Clear Log</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

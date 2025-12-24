@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Advanced Elements Panel Exercise - Dashboard</title>
+</head>
+<body>
+    <header class="header">
+        <h1>Dashboard</h1>
+        <div class="header-actions">
+            <button id="simulate-notification" class="btn">Simulate Notification</button>
+            <div class="notification-icon">
+                🔔
+                <span class="notification-badge">3</span>
+            </div>
+            <button id="open-modal" class="btn">Open Modal</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">📊 Overview</a>
+                <a href="#" class="nav-item">📈 Analytics</a>
+                <a href="#" class="nav-item">👥 Users</a>
+                <a href="#" class="nav-item">⚙️ Settings</a>
+                <a href="#" class="nav-item">📝 Reports</a>
+            </nav>
+        </aside>
+
+        <main class="dashboard">
+            <!-- Widget that should span 2 columns but doesn't -->
+            <div class="widget widget-large">
+                <h3>Revenue Overview</h3>
+                <p>This widget should span 2 columns to display the chart properly.</p>
+                <div class="chart-placeholder">[Chart would go here]</div>
+            </div>
+
+            <div class="widget">
+                <h3>Active Users</h3>
+                <p class="stat">1,234</p>
+            </div>
+
+            <div class="widget">
+                <h3>Conversion Rate</h3>
+                <p class="stat">3.2%</p>
+            </div>
+
+            <!-- Cards with hover effect issue -->
+            <div class="card">
+                <h4>Project Alpha</h4>
+                <p>Status: In Progress</p>
+                <div class="card-hover-menu">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                    <button>Share</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Project Beta</h4>
+                <p>Status: Complete</p>
+                <div class="card-hover-menu">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                    <button>Share</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Project Gamma</h4>
+                <p>Status: Planning</p>
+                <div class="card-hover-menu">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                    <button>Share</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal with z-index issue -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <p>This modal should appear above everything, including the header.</p>
+            <button id="close-modal" class="btn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle modal
+        document.getElementById('open-modal').addEventListener('click', () => {
+            document.getElementById('modal').classList.remove('hidden');
+        });
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('modal').classList.add('hidden');
+        });
+
+        // Simulate notification animation
+        document.getElementById('simulate-notification').addEventListener('click', () => {
+            const badge = document.querySelector('.notification-badge');
+            badge.style.animation = 'none';
+            // Trigger reflow to restart animation
+            badge.offsetHeight;
+            badge.style.animation = 'pulse 0.1s ease-in-out 3';
+        });
+    </script>
+</body>
+</html>
+

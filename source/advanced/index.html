@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sources Panel Advanced Exercise - User Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #00d9ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+        }
+
+        .panel {
+            background: #16213e;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #0f3460;
+        }
+
+        .panel h2 {
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 0.9rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button.secondary {
+            background: #0f3460;
+            border: 1px solid #00d9ff;
+        }
+
+        #user-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-item.admin {
+            border-left: 3px solid #ffd700;
+        }
+
+        .user-item.error {
+            border-left: 3px solid #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .user-bonus {
+            color: #00d9ff;
+            font-weight: bold;
+        }
+
+        #output {
+            background: #0a0a15;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.6rem;
+            background: #0f3460;
+            border: 1px solid #00d9ff;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        form label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        form input, form select {
+            padding: 0.6rem;
+            background: #0f3460;
+            border: 1px solid #00d9ff;
+            border-radius: 6px;
+            color: white;
+        }
+
+        .hint {
+            background: #2d1b4e;
+            border-left: 3px solid #764ba2;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>👥 User Management System</h1>
+    <p class="subtitle">Advanced Sources Panel Debugging Exercise</p>
+
+    <div class="container">
+        <div class="panel">
+            <h2>User List</h2>
+            <div class="controls">
+                <button id="load-users">Load Users</button>
+                <button id="process-all" class="secondary">Process All</button>
+                <button id="clear-users" class="secondary">Clear</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search users... (type to trigger keydown events)">
+                <button id="search-btn">Search</button>
+            </div>
+            <div id="user-list">
+                <p style="color: #666;">Click "Load Users" to fetch user data</p>
+            </div>
+            <div class="hint">
+                💡 Set conditional breakpoints on processUser to pause for specific users
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Add New User</h2>
+            <form id="add-user-form">
+                <label>
+                    Name:
+                    <input type="text" name="name" required placeholder="Enter name">
+                </label>
+                <label>
+                    Role:
+                    <select name="role">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </label>
+                <label>
+                    Score:
+                    <input type="number" name="score" value="50" min="0" max="200">
+                </label>
+                <button type="submit">Add User</button>
+            </form>
+            <div class="hint">
+                💡 Use Event Listener Breakpoints → "submit" to pause on form submission
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Debug Actions</h2>
+            <div class="controls">
+                <button id="secret-action">Secret Action</button>
+                <button id="trigger-error" class="secondary">Trigger API Error</button>
+                <button id="modify-dom" class="secondary">Modify DOM</button>
+            </div>
+            <div class="hint">
+                💡 Use Event Listener Breakpoints → "click" to find the Secret Action handler
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Console Output</h2>
+            <div id="output">Logs will appear here...</div>
+        </div>
+    </div>
+
+    <!-- Third-party utility library (for blackboxing exercise) -->
+    <script src="utils.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+

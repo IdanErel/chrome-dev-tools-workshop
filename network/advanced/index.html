@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Panel Advanced Exercise - Real-Time Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel h2 {
+            color: #00ff88;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff4757;
+        }
+
+        .status-dot.connected {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00ff88 0%, #00d9ff 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        button.secondary {
+            background: transparent;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            color: white;
+        }
+
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            background: linear-gradient(135deg, #00ff88 0%, #00d9ff 100%);
+            color: #1a1a2e;
+            margin-left: auto;
+        }
+
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .message.system {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            text-align: center;
+            max-width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .message .time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .log-container {
+            height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+        }
+
+        .log-entry {
+            margin-bottom: 0.25rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-entry.error {
+            color: #ff4757;
+        }
+
+        .log-entry.success {
+            color: #00ff88;
+        }
+
+        .log-entry.info {
+            color: #00d9ff;
+        }
+
+        .hint {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 3px solid #00d9ff;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+        }
+
+        .resource-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .resource-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+
+        .resource-item .size {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .resource-item .status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .resource-item .status.loaded {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .resource-item .status.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>💬 Real-Time Chat</h1>
+    <p class="subtitle">Network Panel Advanced Exercise</p>
+
+    <div class="container">
+        <!-- WebSocket Chat Panel -->
+        <div class="panel">
+            <h2>
+                <span class="status-dot" id="ws-status"></span>
+                WebSocket Chat
+            </h2>
+            <div class="controls">
+                <button id="connect-ws">Connect WebSocket</button>
+                <button id="disconnect-ws" class="danger">Disconnect</button>
+            </div>
+            <div class="chat-container" id="chat-messages">
+                <div class="message system">
+                    Click "Connect WebSocket" to start chatting
+                </div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="message-input" placeholder="Type a message..." disabled>
+                <button id="send-message" disabled>Send</button>
+            </div>
+            <div class="hint">
+                💡 Filter by <strong>WS</strong> in Network panel to see WebSocket traffic. 
+                Click the connection → <strong>Messages</strong> tab to see sent/received data.
+            </div>
+        </div>
+
+        <!-- REST API Panel -->
+        <div class="panel">
+            <h2>📡 REST API Fallback</h2>
+            <div class="controls">
+                <button id="fetch-rest">Fetch Messages via REST</button>
+                <button id="fetch-users" class="secondary">Fetch Users</button>
+                <button id="fetch-posts" class="secondary">Fetch Posts</button>
+            </div>
+            <div class="controls">
+                <button id="trigger-404" class="danger">Trigger 404</button>
+                <button id="trigger-500" class="danger">Trigger 500</button>
+            </div>
+            <div class="log-container" id="api-log">
+                <div class="log-entry info">API requests will appear here...</div>
+            </div>
+            <div class="hint">
+                💡 Try <strong>blocking requests</strong>: Right-click a request → "Block request URL".
+                Then test how the app handles failures.
+            </div>
+        </div>
+
+        <!-- Request Analysis Panel -->
+        <div class="panel">
+            <h2>📊 Request Analysis</h2>
+            <div class="controls">
+                <button id="load-heavy">Load Heavy Resources</button>
+                <button id="parallel-requests" class="secondary">Parallel Requests</button>
+            </div>
+            <div class="resource-list" id="resource-list">
+                <div class="resource-item">
+                    <span>No resources loaded</span>
+                </div>
+            </div>
+            <div class="hint">
+                💡 Analyze the <strong>Waterfall</strong> column. Hover over bars to see 
+                DNS lookup, connection time, TTFB, and download time.
+            </div>
+        </div>
+
+        <!-- Network Tools Panel -->
+        <div class="panel">
+            <h2>🔧 Network Tools Practice</h2>
+            <p style="margin-bottom: 1rem; color: #888;">Practice these DevTools features:</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                    <strong>1. Copy as cURL</strong>
+                    <p style="font-size: 0.85rem; color: #888;">Right-click request → Copy → Copy as cURL</p>
+                </div>
+                <div style="padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                    <strong>2. Export HAR</strong>
+                    <p style="font-size: 0.85rem; color: #888;">Click export icon (↓) to save all requests</p>
+                </div>
+                <div style="padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                    <strong>3. Local Overrides</strong>
+                    <p style="font-size: 0.85rem; color: #888;">Sources → Overrides → Select folder → Override content</p>
+                </div>
+                <div style="padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                    <strong>4. Throttling</strong>
+                    <p style="font-size: 0.85rem; color: #888;">Use throttling dropdown to simulate slow network</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
