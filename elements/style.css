@@ -1,3 +1,31 @@
+/**
+ * Elements Panel - Basic Exercise
+ * ================================
+ * 
+ * This stylesheet contains INTENTIONAL CSS bugs for you to find and fix
+ * using the Elements panel in Chrome DevTools.
+ * 
+ * BUGS TO FIND:
+ * 1. Wrong colors - hero and form sections use blue (#007bff) instead of green (#4CAF50)
+ * 2. Layout misalignment - .feature elements have inconsistent margins
+ * 3. Overlapping elements - the "New!" badge may overlap content
+ * 
+ * HOW TO USE THE ELEMENTS PANEL:
+ * 1. Right-click any element → Inspect
+ * 2. In the Styles panel, you can edit CSS values live
+ * 3. Use the box model diagram to understand margins/padding
+ * 4. Changes are temporary - they'll reset on page refresh
+ * 
+ * SUCCESS CRITERIA:
+ * ✓ Hero section background is green (#4CAF50)
+ * ✓ Form section border is green (#4CAF50)
+ * ✓ All three .feature boxes are aligned (same horizontal and vertical position)
+ * ✓ "New!" badges don't overlap with other content
+ */
+
+/* ===========================================
+   Base Styles
+   =========================================== */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -12,6 +40,7 @@ header {
     text-align: center;
 }
 
+/* Navigation */
 nav ul {
     list-style-type: none;
     margin: 0;
@@ -28,13 +57,19 @@ nav ul li a {
     text-decoration: none;
 }
 
+/* ===========================================
+   BUG #1: Wrong Background Color
+   The design spec says this should be green (#4CAF50)
+   but someone set it to blue (#007bff)
+   =========================================== */
 .hero {
-    background-color: #007bff; /* Intentional bug: Should be #4CAF50 */
+    background-color: #007bff; /* BUG: Should be #4CAF50 (green) */
     color: white;
     padding: 50px;
     text-align: center;
 }
 
+/* Callout box with warning pseudo-element */
 .callout {
     border: 2px solid #ff0000;
     padding: 20px;
@@ -42,6 +77,10 @@ nav ul li a {
     position: relative;
 }
 
+/* 
+ * This ::before pseudo-element adds a "Warning" label
+ * EXERCISE: Change the color to green (#4CAF50) and increase font-size
+ */
 .callout .important::before {
     content: "Warning";
     font-size: 20px;
@@ -49,15 +88,35 @@ nav ul li a {
     margin-right: 10px;
 }
 
+/* ===========================================
+   Features Section - Flexbox Layout
+   =========================================== */
 .features {
     display: flex;
     padding: 20px;
-    position: relative; /* Intentional issue for overlapping */
+    position: relative;
+    /* 
+     * SOLUTION HINT: After removing the margin hacks below,
+     * add this to create consistent spacing:
+     * gap: 20px;
+     */
 }
 
+/* ===========================================
+   BUG #2: Inconsistent Margins Cause Misalignment
+   
+   The .feature boxes should all be aligned, but individual
+   margin overrides are breaking the layout.
+   
+   EXERCISE:
+   1. Inspect the .feature elements in DevTools
+   2. Look at the Box Model diagram to see the margins
+   3. Notice the first and last items have extra margins
+   4. Remove the margin overrides and use 'gap' on .features instead
+   =========================================== */
 .feature {
     flex: 1;
-    margin: 0 10px; /* Intentional issue: Misalignment due to margins */
+    margin: 0 10px; /* Base horizontal margin - this is fine */
     padding: 20px;
     background-color: #f4f4f4;
     border: 1px solid #ccc;
@@ -65,37 +124,71 @@ nav ul li a {
     position: relative;
 }
 
+/* BUG: Extra margins on first feature - causes horizontal AND vertical misalignment */
 .feature:first-child {
-    margin-left: 50px; /* Intentional issue: Extra left margin causes horizontal misalignment */
+    margin-left: 50px;  /* PROBLEM: 50px instead of 10px - pushes it right */
     margin-right: 10px;
-    margin-top: 30px; /* Intentional issue: Extra top margin causes vertical misalignment */
+    margin-top: 30px;   /* PROBLEM: Extra top margin - pushes it down */
+    /*
+     * SOLUTION: Remove all of these overrides!
+     * Or remove this entire rule block and use gap on .features
+     */
 }
 
+/* BUG: Extra margins on last feature - causes horizontal AND vertical misalignment */
 .feature:last-child {
     margin-left: 10px;
-    margin-right: 50px; /* Intentional issue: Extra right margin causes horizontal misalignment */
-    margin-top: 20px; /* Intentional issue: Extra top margin causes vertical misalignment */
+    margin-right: 50px; /* PROBLEM: 50px instead of 10px - pushes it left */
+    margin-top: 20px;   /* PROBLEM: Extra top margin - pushes it down */
+    /*
+     * SOLUTION: Remove all of these overrides!
+     * Or remove this entire rule block and use gap on .features
+     */
 }
 
+/* ===========================================
+   BUG #3: Overlapping "New!" Badge
+   
+   The pseudo-element positioning might cause overlap
+   on certain screen sizes.
+   
+   EXERCISE:
+   1. Toggle responsive design mode (Ctrl/Cmd + Shift + M)
+   2. Try different screen widths
+   3. Notice if the "New!" badge overlaps other content
+   4. Adjust the positioning to prevent overlap
+   =========================================== */
 .feature::after {
     content: "New!";
     position: absolute;
     top: 20px;
-    right: 52px;
+    right: 52px; /* This value might cause issues on small screens */
     background-color: yellow;
     padding: 5px;
     border: 1px solid red;
     font-size: 12px;
     color: red;
+    /*
+     * SOLUTION: Use a smaller right value or make it responsive:
+     * right: 10px;
+     * 
+     * Or use media queries to hide on small screens:
+     * @media (max-width: 600px) { display: none; }
+     */
 }
 
+/* ===========================================
+   BUG #1 (continued): Wrong Border Color
+   Same issue as the hero - should be green, not blue
+   =========================================== */
 .form-section {
     background-color: #f9f9f9;
     padding: 20px;
     margin-top: 20px;
-    border-top: 5px solid #007bff; /* Intentional bug: Should be #4CAF50 */
+    border-top: 5px solid #007bff; /* BUG: Should be #4CAF50 (green) */
 }
 
+/* Form Styles */
 form label {
     display: block;
     margin-top: 10px;
@@ -110,13 +203,14 @@ form input, form textarea {
 }
 
 form button {
-    background-color: #007bff;
+    background-color: #007bff; /* This one can stay blue (it's the button) */
     color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
 }
 
+/* Footer */
 footer {
     background-color: #282c34;
     color: white;
@@ -124,3 +218,22 @@ footer {
     padding: 10px;
     margin-top: 20px;
 }
+
+/* ===========================================
+   SOLUTIONS SUMMARY
+   ===========================================
+   
+   BUG #1 - Wrong Colors:
+   - Change .hero background-color from #007bff to #4CAF50
+   - Change .form-section border-top color from #007bff to #4CAF50
+   
+   BUG #2 - Misaligned Features:
+   - Remove the .feature:first-child rule entirely
+   - Remove the .feature:last-child rule entirely  
+   - Remove margin from .feature base rule
+   - Add 'gap: 20px;' to .features container
+   
+   BUG #3 - Overlapping Badge:
+   - Change .feature::after right value to something smaller
+   - Or use media queries to adjust/hide on small screens
+   =========================================== */
