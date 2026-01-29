@@ -1,6 +1,17 @@
-# Chrome DevTools Exercises
+# Chrome DevTools Workshop
 
-This repository contains a series of exercises designed to help you master Google Chrome DevTools. Each directory corresponds to a key panel in DevTools and contains practical exercises that challenge you to apply your knowledge.
+A hands-on workshop to master Google Chrome DevTools. Each section contains exercises that challenge you to debug real issues using DevTools.
+
+## 📽️ Presentation Slides
+
+This workshop includes a complete slide deck for instructors or self-guided learning:
+
+```bash
+# View slides (requires Marp VS Code extension or Marp CLI)
+marp slides.md
+```
+
+See [SLIDES_README.md](./SLIDES_README.md) for export options (PDF, HTML, PPTX).
 
 ## Structure
 
